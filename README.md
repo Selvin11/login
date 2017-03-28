@@ -60,6 +60,26 @@ npm run server  启动服务端并开启浏览器
 
 2. `token`（JSON Web Token）
 
+   参考资料：
+
+   [JSON Web Token详情](http://blog.leapoahead.com/2015/09/06/understanding-jwt/)
+
+   [八幅漫画理解使用JSON Web Token设计单点登录系统](http://blog.leapoahead.com/2015/09/07/user-authentication-with-jwt/)
+
+   用户提交其信息表单（比如包含username,password），服务端收到后，将username转为userId存储在JWT的payload（负荷）中，与头部进行Base64编码拼接后进行签名，于是形成了JWT，在cookie中保存返回给浏览器并设置时效，在失效之前浏览器每次请求时都会携带有JWT的cookie，因此服务端可以对JWT进行解密，与数据库中的user进行比较，确认无误后，便返回请求。
+
+   * cookie&&session 需要服务端提供独立机制来存储sessionId(内存，数据库等)
+   * cookie&&token 不需要服务端进行额外存储，但增加了加密，解密，编码等操作
+
+   > 单点登录（一个站点登录，其余站点皆可登录）
+
+   * cookie&&session sessionId是需要存储在服务器上的，因此多个域名下的服务器都需要同步sessionId
+   * JWT是通过cookie传递的，并且不需要额外存储，只需要将含有JWT的cookie的域名设置为顶级域名，则旗下的域名皆可访问到此cookie以及其中包含的JWT
+
+   ​
+
+   ​
+
    ​
 
 3. 第三方：`access_token`
