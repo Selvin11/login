@@ -38,15 +38,15 @@ app.use(express.static('dist'))
 
 // session
 app.use(session({
-  secret: 'usertest',
-  key: 'usertest',
+  secret: 'usersession',
+  key: 'usersession',
   resave: true, 
   saveUninitialized: true,
   cookie:{
     maxAge: 6000
   }
   // store: new MongoStore({
-  //   url: "mongodb://localhost:27017/usertest"
+  //   url: "mongodb://localhost:27017/usersession"
   // })
 }))
 
