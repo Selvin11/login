@@ -3,6 +3,7 @@
 * 采用`vue-cli` 构建初始项目目录
 * 使用`vue2`、`vue-router2`、`Element-ui`、`express`、`webpack2`、`gulp`构建项目开发环境
 * 前端采用Vue、Element-ui搭建页面以及Vuex进行数据处理，后端采用express完成注册、登录、登出、登录状态查询的restful API
+* 目前分为session登录和token登录
 * 页面为注册页，登录页，主页
 
 > 目录及文件的改动，均含详细备注
@@ -14,6 +15,11 @@
 5. gulpfile.js 增加服务器重启和浏览器刷新任务
 6. server.js  服务端启动文件
 
+> 项目区分
+
+1. session登录的前后端对应src和server
+2. token登录的前后端对应src-token和server-token
+3. 主要是通过express设置当前目录为静态资源位置，通过根目录下的index.html进入不同的src下的index.html，从而实现项目区分
 
 > 操作指令
 

@@ -66,7 +66,8 @@ app.use(hotMiddleware)
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
-var uri = 'http://localhost:' + port
+app.use(express.static('./')) // 使其根目录下的index.html可以被当做静态资源访问
+var uri = 'http://localhost:' + port + '/index.html'
 
 devMiddleware.waitUntilValid(function() {
   console.log('> Listening at ' + uri + '\n')
