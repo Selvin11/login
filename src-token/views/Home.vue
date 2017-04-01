@@ -32,9 +32,9 @@
       }
     },
     created(){
-      // 当主页刷新时，如果服务端设置的cookie（包含sessionId）
-      // 的时效到了的话，便会提示未登录
-      this.$http.get('/api')
+      // 当主页刷新时，如果服务端设置的token的时效到了的话，
+      // 便会提示token过期，请重新登录
+      this.$http.get('/apitoken')
         .then(res => {
           console.dir(res.data)
           if (res.data.error) {
@@ -42,7 +42,7 @@
             this.user.name = null;
             return false;
           }else{
-            let username = localStorage.getItem('user');
+            let username = localStorage.getItem('username'); 
             if (username) {
               this.user.name = username;
             }
@@ -59,17 +59,13 @@
       loginOut(){
         this.userLoginOut();
         this.user.name = null;
-        this.$http.get('/api/user')
-          .then(res => {
-            console.dir(res.data)
-            if (res.data.message) {
-              this.$message.success(res.data.message);
-              return false;
-            }
-          })
-          .catch(err => {
-              this.$message.error(`${err.message}`)
-          })
+        if (!this.$store.state.token) {
+            this.$router.push('/login')
+            this.$message.success('登出成功');
+        } else {
+            this.$message.success('登出失败');
+        }
+        
       }
     }
   }

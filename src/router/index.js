@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import axios from 'axios'
+// import axios from 'axios'
 import store from '@/store/index.js'
 import Home from '@/views/Home'
 import Login from '@/views/Login'
@@ -32,9 +32,11 @@ const router = new Router({
 // 在vue-router的全局钩子中设置拦截 
 // 每个路由皆会的钩子函数
 // to 进入 from 离开 next 传递
+// 不考虑刷新浏览器的情况，
+// 实现了在各个需要登录和不需要登录状态之间跳转的拦截
+// 底部是另外两个拦截条件不同的路由拦截方案，仅记录当时的思考
 
 // router.beforeEach((to, from, next) => {
-//     console.log(store.state.user.name)
 //     if (to.meta.requireLogin) {
 //         // 通过判断状态中是否存在user.name
 //         // 浏览store中的代码即可了解
@@ -65,6 +67,8 @@ const router = new Router({
 //         next();
 //     }
 // })
+
+
 // 至此所有路由完成拦截
 // 但是这种方式只是简单的前端路由控制
 // 并不能真正阻止用户访问需要登录权限的路由，而且存在以下问题
@@ -77,40 +81,66 @@ const router = new Router({
 // 请求后端一个获取session的api，只要页面刷新就会传递请求，
 // 如果session失效，则返回错误代码，前端接受后即可清除掉本地localStorage中的user信息
 // 但问题显而易见，当需要登录状态的路由较多时，需要每一个都设置，
-// 因此需要一个可以全局挂载的请求拦截
+// 因此需要一个可以全局挂载的http请求拦截 使用axios中的Interceptors（拦截器）模块，在全局请求使用上面的流程
+// /util/interceptor.js  实现了axios的响应拦截
 
-// 方案一： 还是以router的beforeEach全局钩子函数为基础，
+
+
+// 路由拦截的另外两种方案思考
+// 方案一
 // 在里面请求后端一个获取session的api
 
-router.beforeEach((to, from, next) => {
+// router.beforeEach((to, from, next) => {
 
+//     if (to.meta.requireLogin) {
+//         // 向后端请求获取session的api
+//         axios.get('/api')
+//             .then(res => {
+//                 // console.dir(res.data)
+//                 if (res.data.error) {
+//                     next({
+//                         // 如果session失效，则跳转至登录页
+//                         path: '/login',
+//                         // 跳转后将跳转前的url赋值给参数redirect
+//                         query: {
+//                             redirect: to.fullPath
+//                         }
+//                     })
+//                 } else {
+//                     next();
+//                 }
+//             })
+//             .catch(err => {
+//                 console.dir(err);
+//             })
+
+//     } else {
+//         next();
+//     }
+// })
+
+// 方案二：
+// 根据localStorage是否存在为判断依据，
+// 因为每次进入需要登录状态的页面，(参见home.vue以及store/mutations.js)
+// 已经对获取session的api进行了访问，因此方案一增加了请求次数
+router.beforeEach((to, from, next) => {
+    let session = localStorage.getItem('session')
     if (to.meta.requireLogin) {
-        // 向后端请求获取session的api
-        axios.get('/api')
-            .then(res => {
-                // console.dir(res.data)
-                if (res.data.error) {
-                    next({
-                        // 如果session失效，则跳转至登录页
-                        path: '/login',
-                        // 跳转后将跳转前的url赋值给参数redirect
-                        query: {
-                            redirect: to.fullPath
-                        }
-                    })
-                } else {
-                    next();
+        if (session) {
+            next();
+        } else {
+            next({
+                path: '/login',
+                query: {
+                    redirect: to.fullPath
                 }
             })
-            .catch(err => {
-                console.dir(err);
-            })
+        }
 
     } else {
         next();
     }
 })
+
+
 export default router;
-
-
-// 方案二：使用axios中的Interceptors（拦截器）模块，在全局请求使用上面的流程

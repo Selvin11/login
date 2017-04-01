@@ -5,8 +5,7 @@ const moment = require('moment')
 const objectIdToTimestamp = require('objectid-to-timestamp')
 const sha1 = require('sha1')
 const createToken = require('../middlewares/createToken')
-const checkLogin = require('../middlewares/checkLogin').checkLogin
-const checkNotLogin = require('../middlewares/checkLogin').checkNotLogin
+const checkToken = require('../middlewares/checkToken')
 
 // 注册
 const Register = (req, res) => {
@@ -14,7 +13,7 @@ const Register = (req, res) => {
   // Entity —— 由Model创建的实体，使用save方法保存数据
   let userRegister = new User({
     name: req.body.name,
-    password: sha1(req.body.password),// 将密码加密
+    password: sha1(req.body.password), // 将密码加密
     token: createToken(this.name)
   })
 
@@ -30,16 +29,16 @@ const Register = (req, res) => {
     .format('YYYY-MM-DD HH:mm:ss');
 
   User.findOne({
-    name: (userRegister.name).toLowerCase()
-  })
-    .then(user=>{
+      name: (userRegister.name).toLowerCase()
+    })
+    .then(user => {
       if (user) {
         res.json({
           success: false,
           message: '该账户已注册'
         })
-      }else{
-        userRegister.save((err,user) => {
+      } else {
+        userRegister.save((err, user) => {
           if (err) {
             res.json(err)
           } else {
@@ -48,7 +47,7 @@ const Register = (req, res) => {
         })
       }
     })
-    .catch(err=>res.json(err))
+    .catch(err => res.json(err))
 }
 
 // 登录
@@ -59,15 +58,15 @@ const Login = (req, res) => {
     token: createToken(this.name)
   })
   User.findOne({
-    name: userLogin.name 
-  })
-    .then(user=>{
-      if(!user) {
+      name: userLogin.name
+    })
+    .then(user => {
+      if (!user) {
         res.json({
           success: false,
           message: "账号不存在"
         })
-      } else if(userLogin.password === user.password) {
+      } else if (userLogin.password === user.password) {
         var name = req.body.name;
         res.json({
           success: true,
@@ -85,15 +84,20 @@ const Login = (req, res) => {
         })
       }
     })
-    .catch(err=>res.json(err))
+    .catch(err => res.json(err))
+}
+
+// 所有用户打印
+const GetToken = (req, res) => {
+  res.json({
+    auth: req.headers.Authorization
+  })
 }
 
 
 
-
-
 module.exports = (router) => {
-  router.post('/register',Register),
-  router.post('/login', Login),
-    // router.get('/user', checkToken, delSession)
+  router.post('/register', Register),
+    router.post('/login', Login),
+    router.get('', checkToken, GetToken)
 }

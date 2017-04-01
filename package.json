@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
-    "server": "gulp",
+    "session": "gulp session",
+    "token": "gulp token",
     "build": "node build/build.js"
   },
   "dependencies": {

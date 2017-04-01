@@ -140,5 +140,4 @@ module.exports = (router) => {
     router.post('/login', checkNotLogin, Login),
     router.get('/user', checkLogin, delSession),
     router.get('/', checkLogin, getSession)
-    // router.post('/delUser', checkLogin, delUser)
 }

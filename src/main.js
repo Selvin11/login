@@ -10,7 +10,7 @@ import Element from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 Vue.use(Element);
 
-import axios from 'axios'
+import axios from './util/interceptor.js'
 Vue.prototype.$http = axios;
 
 import store from './store/index.js'

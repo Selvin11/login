@@ -8,6 +8,7 @@ const mongoose = require('mongoose')
   // const MongoStore = require('connect-mongo')(session);
 const index = require('./server/router/index') // localhost:3000/
 const user = require('./server/router/user')
+  // token机制的user
 
 const db = mongoose.connect(config.mongodb);
 // 数据库连接
@@ -43,7 +44,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie: {
-    maxAge: 30000 // 设置返回的cookie时效为30秒，测试用
+    maxAge: 10000 // 设置返回的cookie时效为30秒，测试用
   }
   // store: new MongoStore({
   //   url: "mongodb://localhost:27017/usersession"

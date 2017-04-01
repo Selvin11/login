@@ -96,7 +96,7 @@
         this.$refs['formLogin'].validate((valid) => {
           if (valid) {
             // 通过验证之后才请求登录接口
-            this.$http.post('/api/login',formData)
+            this.$http.post('/apitoken/login',formData)
                 .then(res => {
                     console.dir(res.data)
                     if (res.data.success) {

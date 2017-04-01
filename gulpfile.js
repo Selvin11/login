@@ -17,9 +17,11 @@ gulp.task('browser-sync', ['nodemon'], function() {
     });
 });
 // browser-sync 监听文件
-gulp.task('default', ['browser-sync'], function() {
+gulp.task('server', ['browser-sync'], function() {
     gulp.watch(['./server.js', './server/**'], ['bs-delay']);
 });
+
+
 // 延时刷新
 gulp.task('bs-delay', function() {
     setTimeout(function() {

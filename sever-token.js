@@ -1,10 +1,10 @@
 const pkg = require('./package')
-const config = require('./server/db/dbconfig')
+const config = require('./server-token/db/dbconfig')
 const express = require('express')
 const favicon = require('serve-favicon')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-const user = require('./server/router/user')
+const user = require('./server-token/router/user')
 
 const db = mongoose.connect(config.mongodb);
 // 数据库连接
