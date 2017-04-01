@@ -36,15 +36,15 @@
       // 的时效到了的话，便会提示未登录
       this.$http.get('/api')
         .then(res => {
-          console.dir(res.data)
+          // console.dir(res.data)
           if (res.data.error) {
             this.$message.error(res.data.error);
             this.user.name = null;
             return false;
           }else{
-            let username = localStorage.getItem('user');
-            if (username) {
-              this.user.name = username;
+            let user = localStorage.getItem('user');
+            if (user) {
+              this.user.name = user;
             }
           }
         })

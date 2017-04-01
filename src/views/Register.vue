@@ -75,7 +75,7 @@
       }
     },
     methods:{
-      // 增加单条电影
+      // 用户注册
       addUser(){
         let user = this.formRegister;
         let formData = {
@@ -88,8 +88,8 @@
             this.$http.post('/api/register',formData)
             .then(res => {
               console.dir(res.data)
-              if (res.data.message) {
-                this.$message.error(res.data.message);
+              if (res.data.error) {
+                this.$message.error(res.data.error);
                 return false;
               }else{
                 this.$router.push('/login')

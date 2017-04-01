@@ -47,17 +47,20 @@ npm run server  启动服务端并开启浏览器
 
 
 
-#### 详谈注册/登录/登出
+> 详谈注册/登录/登出
 
-> 登录功能实现的原理
+一. [登录功能实现的原理](#1)
+二. [登录功能实现的几种方式](#2)
+三. [基本登录 cookie && session 详解](#3)
+
+<h3 id="1">一. 登录功能实现的原理</h3>
 
 浏览器用户提交表单后与服务器产生会话，传递给服务器一个识别信息，同时服务器这边有相应的数据，因此能够对其进行比较，然后识别是否为正确的用户，而且一般需要设定此数据的存储时长，也就是用户认证的时长，过了这个时间段，则会失效，需要重新登录，因此这里需要有四个关键点，**浏览器的信息**，**服务器的信息**，**两个信息的对比**，**时效设定**。
 
-> 登录功能实现的几种方式
+<h3 id="1">二. 登录功能实现的几种方式</h3>
+1. 基本登录 cookie && session
 
-1. [基本登录 cookie && session](#1)
-
-   浏览器提交用户表单后，服务器接受表单中的用户信息，将其存在session表中（session表存在内存，数据库，缓存等），然后以cookie的方式（cookie中存有sessionId及对应值）传回给浏览器，这样只要浏览器的cookie没有失效，则在这段时间内，服务端便能正确识别用户信息，不用重复登录
+   浏览器提交用户表单后，服务器接受表单中的用户信息，将其存在session表中（session表存在内存，数据库，缓存等），然后以cookie的方式（cookie中存有sessionId及对应值）传回给浏览器，这样只要服务端设置的cookie没有失效，则在这段时间内，服务端便能正确识别用户信息，不用重复登录（sessionID是在服务端销毁的）
 
    * 服务器端的产生Session ID
    * 服务器端和客户端存储Session ID
@@ -82,23 +85,19 @@ npm run server  启动服务端并开启浏览器
    * cookie&&session sessionId是需要存储在服务器上的，因此多个域名下的服务器都需要同步sessionId
    * JWT是通过cookie传递的，并且不需要额外存储，只需要将含有JWT的cookie的域名设置为顶级域名，则旗下的域名皆可访问到此cookie以及其中包含的JWT
 
-   ​
-
-   ​
-
-   ​
 
 3. 第三方：`access_token`
 
 
-<h4 id="1">基本登录 cookie && session </h4>
+
+<h3 id="3">三. 基本登录 cookie && session 详解 </h3>
 
 1. 通过mongoose建立数据模型，以name为主索引并设置其唯一属性，此例中，我们服务端采用内存储存sessionId，也可尝试mongoDB或redis等，均有相应的中间件可以使用。
 
 2. 登录   POST：  `/api/login` 
   在前端vue中怎样识别登录状态，当输入用户表单后点击登录，我们向`/api/login `发起了`pos`t请求，`/api/login `对应的控制器中进行了这样几步流程
 
-  * 将request中包含的用户信息（用户名，密码），生成mogoose实例
+  * request中包含的用户信息（用户名，密码），生成mogoose实例
 
   * 进入mongoDB中查找此用户名的信息（User 的Skema模型中已经设定name为唯一的索引，不能重复的）
 
@@ -114,27 +113,27 @@ npm run server  启动服务端并开启浏览器
 
     在其它如/api/register、/api/user中通过判断req.session.user的存在与否，来实现登录登出状态的改变
 
-  ```javascript
-  checkLogin(req, res, next) {
-      if (!req.session.user) {
-        return res.json({
-           error: '未登录'
-        });
-      }
-      next();
-    },
+    ```javascript
+    checkLogin(req, res, next) {
+        if (!req.session.user) {
+          return res.json({
+             error: '未登录'
+          });
+        }
+        next();
+      },
 
-    checkNotLogin(req, res, next) {
-      if (req.session.user) {
-        return res.json({
-          error: '已登录'
-        });
+      checkNotLogin(req, res, next) {
+        if (req.session.user) {
+          return res.json({
+            error: '已登录'
+          });
+        }
+        next();
       }
-      next();
-    }
-  ```
+    ```
 
-  由此，当流程跑通之后，我们能够得到返回登录成功的信息，接下来就可以在前端通过`vue-router`实现跳转，以及将获取的user信息填入`localstorage`，供其它页面使用其数据。
+  至此，当流程跑通之后，我们能够得到返回登录成功的信息，接下来就可以在前端通过`vue-router`实现跳转，以及将获取的user信息填入`localstorage`，供其它页面使用其数据。
 
 3. 注册   POST： `/api/register`
 
@@ -143,12 +142,13 @@ npm run server  启动服务端并开启浏览器
    * 通过request获取用户名和密码，并将密码加密（此处采用sha1），生成mongoose实例，同时通过`objectid-to-timestamp `将实例中的objectId转化为时间格式，即为此实例的创建时间，具体可看**疑问详解**。
    * 通过唯一的name属性，进入数据库查询，看该用户名是否已经被注册，返回相应的数据。
 
-4. 登出    GET：`/api/user`
+4. 登出   GET：`/api/user`
 
 
    此api的作用是实现登出功能的，当点击登出后，vue通过axios访问此api，api对应的控制器中将执行以下代码
 
    ```javascript
+   // delete user session
    req.session.user = null;
    res.json({
      message:'登出成功'
@@ -172,5 +172,37 @@ npm run server  启动服务端并开启浏览器
 
    因此它的作用即是将前四个字节转化为时间格式。
 
-2. ​
+2. 浏览器刷新之后，vuex维护的全局状态全部消失 ​
 
+  * 理解vuex的作用，以及使用本地存储一些状态数据的意义
+  * vuex状态管理是为了可维护性和可扩展性，和本地缓存没有任何关系。
+  * [详情可看github issue](https://github.com/vuejs/vuex/issues/47) 
+
+3. vue-router中的路由拦截详细介绍
+  
+  ```javascript
+    router.beforeEach((to, from, next) => {
+      next({
+          path: '/login',
+          query: {
+              redirect: to.fullPath
+          }
+      })
+    })
+    // vue-router 的导航钩子函数beforeEach
+    to : 将要进入的 路由对象
+    from : 当前导航正要离开的路由
+    next : 调用next()， resolve beforeEach这个钩子，即调用后，表示这个钩子函数结束了，同时里面可以设置一些跳转等
+
+    path: 表示将要跳转的路由
+    query: 配置路由url的参数
+    fullPath: 完成解析后的 URL，包含查询参数和 hash 的完整路径。
+
+    query: {
+        redirect: to.fullPath
+    }
+
+    这个表示，在当前路由中添加查询参数redirect，以及redirect的值to.fullPath，
+    to.fullPath表示跳转之前的路由url
+
+  ```

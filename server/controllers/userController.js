@@ -28,16 +28,16 @@ const Register = (req, res) => {
     .format('YYYY-MM-DD HH:mm:ss');
 
   User.findOne({
-    name: (userRegister.name).toLowerCase()
-  })
-    .then(user=>{
+      name: (userRegister.name).toLowerCase()
+    })
+    .then(user => {
       if (user) {
         res.json({
           success: false,
-          message: '该账户已注册'
+          error: '该账户已注册'
         })
-      }else{
-        userRegister.save((err,user) => {
+      } else {
+        userRegister.save((err, user) => {
           if (err) {
             res.json(err)
           } else {
@@ -46,7 +46,7 @@ const Register = (req, res) => {
         })
       }
     })
-    .catch(err=>res.json(err))
+    .catch(err => res.json(err))
 }
 
 // 登录
@@ -56,18 +56,18 @@ const Login = (req, res) => {
     password: sha1(req.body.password)
   })
   User.findOne({
-    name: userLogin.name 
-  })
-    .then(user=>{
-      if(!user) {
+      name: userLogin.name
+    })
+    .then(user => {
+      if (!user) {
         res.json({
           success: false,
           message: "账号不存在"
         })
-      } else if(userLogin.password === user.password) {
+      } else if (userLogin.password === user.password) {
         var name = req.body.name;
         // 用户信息写入 session
-        delete user.password;
+        user.password = null;
         req.session.user = user;
         res.json({
           success: true,
@@ -85,7 +85,7 @@ const Login = (req, res) => {
         })
       }
     })
-    .catch(err=>res.json(err))
+    .catch(err => res.json(err))
 }
 
 // 所有用户打印
@@ -106,17 +106,17 @@ const Login = (req, res) => {
 // }
 
 // get user Session
-const getSession = (req,res) => {
+const getSession = (req, res) => {
   res.json({
-    session:req.session
+    session: req.session
   })
 }
 
 // delete user session
-const delSession = (req,res) => {
+const delSession = (req, res) => {
   req.session.user = null;
   res.json({
-    message:'登出成功'
+    message: '登出成功'
   })
 }
 
@@ -124,8 +124,10 @@ const delSession = (req,res) => {
 
 // 删除用户
 const delUser = (req, res) => {
-  User.findOneAndRemove({ _id: req.body.id }, err => {
-    if(err) console.log(err)
+  User.findOneAndRemove({
+    _id: req.body.id
+  }, err => {
+    if (err) console.log(err)
     console.log('删除用户成功')
     res.json({
       success: true
@@ -134,9 +136,9 @@ const delUser = (req, res) => {
 }
 
 module.exports = (router) => {
-  router.post('/register', checkNotLogin,Register),
+  router.post('/register', checkNotLogin, Register),
     router.post('/login', checkNotLogin, Login),
     router.get('/user', checkLogin, delSession),
-    router.get('/', checkLogin, getSession),
-    router.post('/delUser', checkLogin, delUser)
+    router.get('/', checkLogin, getSession)
+    // router.post('/delUser', checkLogin, delUser)
 }

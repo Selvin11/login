@@ -2,7 +2,8 @@ module.exports = {
   checkLogin(req, res, next) {
     if (!req.session.user) {
       return res.json({
-         error: '未登录'
+        error: '未登录',
+        session: req.session
       });
     }
     next();

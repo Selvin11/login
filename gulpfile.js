@@ -12,7 +12,7 @@ var server = path.resolve(ROOT, 'server');
 gulp.task('browser-sync', ['nodemon'], function() {
     bs.init(null, {
         // 默认起的是3000端口
-        proxy: "http://localhost:8080",
+        proxy: "http://localhost:8080/index.html",
         port: 4000
     });
 });
