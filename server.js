@@ -5,10 +5,15 @@ const session = require('express-session')
 const favicon = require('serve-favicon')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-  // const MongoStore = require('connect-mongo')(session);
+  
+// const MongoStore = require('connect-mongo')(session);
+
 const index = require('./server/router/index') // localhost:3000/
+// session机制的user
 const user = require('./server/router/user')
-  // token机制的user
+
+// token机制的user
+const usertoken = require('./server-token/router/usertoken')
 
 const db = mongoose.connect(config.mongodb);
 // 数据库连接
@@ -54,6 +59,7 @@ app.use(session({
 // 设定路由
 app.use('/', index)
 app.use('/api', user)
+// app.use('/api', usertoken)
 
 app.listen(port, () => {
   console.log(`${pkg.name} listening on port ${port}`)

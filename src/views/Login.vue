@@ -104,7 +104,7 @@
                       this.$message.success(`${res.data.message}`)
                       // 登录成功 跳转至首页
                       // this.$router.push({name:'Home'}) 
-                      this.$router.push('/')
+                      // this.$router.push('/')
                     }else{
                       this.$message.error(`${res.data.message}`);
                       return false;
@@ -121,6 +121,7 @@
       },
       // 表单重置
       resetForm(){
+        console.log('session')
         this.$refs['formLogin'].resetFields();
       }
     }
