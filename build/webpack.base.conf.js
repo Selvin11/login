@@ -22,7 +22,7 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src'), // !!! src-token中不能使用
+      '@': resolve('src'), // !!! @ => 将路径指向src
     }
   },
   module: {

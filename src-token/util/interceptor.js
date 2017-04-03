@@ -13,6 +13,13 @@ axios.interceptors.request.use(
         if (localStorage.getItem('token')) {
             config.headers.Authorization = `token ${localStorage.getItem('token')}`
                 .replace(/(^\")|(\"$)/g, '')
+        }else{
+            router.replace({
+                path: 'login',
+                query: {
+                    redirect: router.currentRoute.fullPath
+                }
+            })
         }
         return config
     },

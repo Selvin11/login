@@ -59,7 +59,7 @@ app.use(session({
 // 设定路由
 app.use('/', index)
 app.use('/api', user)
-// app.use('/api', usertoken)
+app.use('/api/token', usertoken)
 
 app.listen(port, () => {
   console.log(`${pkg.name} listening on port ${port}`)

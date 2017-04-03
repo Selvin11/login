@@ -85,7 +85,7 @@
         // 表单验证
         this.$refs['formRegister'].validate((valid)=>{
           if(valid){
-            this.$http.post('/apitoken/register',formData)
+            this.$http.post('/api/token/register',formData)
             .then(res => {
               console.dir(res.data)
               if (res.data.message) {

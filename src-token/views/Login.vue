@@ -96,7 +96,7 @@
         this.$refs['formLogin'].validate((valid) => {
           if (valid) {
             // 通过验证之后才请求登录接口
-            this.$http.post('/apitoken/login',formData)
+            this.$http.post('/api/token/login',formData)
                 .then(res => {
                     console.dir(res.data)
                     if (res.data.success) {
@@ -104,7 +104,7 @@
                       this.$message.success(`${res.data.message}`)
                       // 登录成功 跳转至首页
                       // this.$router.push({name:'Home'}) 
-                      // this.$router.push('/')
+                      this.$router.push('/') 
                     }else{
                       this.$message.error(`${res.data.message}`);
                       return false;
