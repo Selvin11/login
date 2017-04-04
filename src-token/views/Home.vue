@@ -36,7 +36,7 @@
       // 的时效到了的话，便会提示未登录
       this.$http.get('/api/token')
         .then(res => {
-          // console.dir(res.data)
+          console.dir(res.data)
           if (res.data.error) {
             this.userLoginOut();
             this.$message.error(res.data.error);
@@ -44,28 +44,6 @@
             return false;
           }else{
             let username = localStorage.getItem('username');
-            if (username) {
-              this.user.name = username;
-            }
-          }
-        })
-        .catch(err => {
-            this.$message.error(`${err.message}`)
-        })
-      
-    },
-    created(){
-      // 当主页刷新时，如果服务端设置的token的时效到了的话，
-      // 便会提示token过期，请重新登录
-      this.$http.get('/api/token')
-        .then(res => {
-          console.dir(res.data) 
-          if (res.data.error) {
-            this.$message.error(res.data.error);
-            this.user.name = null;
-            return false;
-          }else{
-            let username = localStorage.getItem('username'); 
             if (username) {
               this.user.name = username;
             }

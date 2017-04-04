@@ -89,16 +89,7 @@ const Login = (req, res) => {
 
 // 所有用户打印
 const GetToken = (req, res) => {
-  // return res.json({
-  //   tokenAuth: req.headers
-  // })
-  if(req.headers.authorization.indexOf('token') !== -1){
-    checkToken();
-  }else{
-    res.json({
-      error: '无token记录'
-    })
-  }
+  
 }
 
 
@@ -106,5 +97,5 @@ const GetToken = (req, res) => {
 module.exports = (router) => {
   router.post('/register', Register),
     router.post('/login', Login),
-    router.get('/', checkToken, GetToken)
+    router.get('/',checkToken ,GetToken)
 }

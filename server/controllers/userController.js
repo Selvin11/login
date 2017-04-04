@@ -72,7 +72,7 @@ const Login = (req, res) => {
         res.json({
           success: true,
           message: "登录成功",
-          session: req.session,
+          // session: req.session,
           name: user.name,
           // 账户创建日期
           time: moment(objectIdToTimestamp(user._id))
@@ -108,7 +108,7 @@ const Login = (req, res) => {
 // get user Session
 const getSession = (req, res) => {
   res.json({
-    session: req.session
+    session: true // 提供前端验证session存在与否
   })
 }
 

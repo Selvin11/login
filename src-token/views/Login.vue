@@ -100,7 +100,7 @@
                 .then(res => {
                     console.dir(res.data)
                     if (res.data.success) {
-                      this.userLogin(res.data.name);
+                      this.userLogin(res.data);
                       this.$message.success(`${res.data.message}`)
                       // 登录成功 跳转至首页
                       // this.$router.push({name:'Home'}) 

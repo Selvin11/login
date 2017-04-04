@@ -39,7 +39,7 @@ npm run server  启动服务端并开启浏览器
 [前端热更新，后端服务重启，浏览器自动刷新]( http://selvinpro.com/2017/03/20/browser-reload/#more)
 
 - [x] 实现了基本登录 cookie && session
-* [ ] 独立系统登录 token
+* [x] 独立系统登录 token
 * [ ] 第三方登录 access_token
 
 
@@ -52,6 +52,7 @@ npm run server  启动服务端并开启浏览器
 一. [登录功能实现的原理](#1)
 二. [登录功能实现的几种方式](#2)
 三. [基本登录 cookie && session 详解](#3)
+四. [token登录 详解](#4)
 
 <h3 id="1">一. 登录功能实现的原理</h3>
 
@@ -154,8 +155,16 @@ npm run server  启动服务端并开启浏览器
      message:'登出成功'
    })
    ```
+5. 登录状态判断
+  
+  使用axios的拦截器，后端通过checkLogin函数判断session是否存在，返回sesssion的状态，在axios的响应拦截器中进行跳转设置，具体代码参见`./src/util/interceptor.js`
 
 
+<h3 id="4">四. token登录 详解 </h3>
+
+* 注册登录的实现基本和session相同，除了数据库模型中添加了token属性，然后主要是登录状态的不同
+
+* 使用token判断登录状态，主要是后端的checkToken，将前端请求中携带的token进行解码，获取其设置的有效时长，从而返回token状态，同样使用axios的拦截器，在请求拦截器中添加头部Authorization的token，在响应拦截器中设置判断
 
 > 疑问详解
 

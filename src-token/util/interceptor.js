@@ -27,8 +27,18 @@ axios.interceptors.request.use(
         return Promise.reject(err)
     })
 
+
 // axios拦截响应
 axios.interceptors.response.use(response => {
+    // 后端的checkLogin返回的json数据作为跳转依据
+    if (!response.data.token) {
+        router.replace({
+            path: 'login',
+            query: {
+                redirect: router.currentRoute.fullPath
+            }
+        })
+    }
     return response
 }, err => {
     return Promise.reject(err)

@@ -81,6 +81,8 @@ const router = new Router({
 // 请求后端一个获取session的api，只要页面刷新就会传递请求，
 // 如果session失效，则返回错误代码，前端接受后即可清除掉本地localStorage中的user信息
 // 但问题显而易见，当需要登录状态的路由较多时，需要每一个都设置，
+
+
 // 因此需要一个可以全局挂载的http请求拦截 使用axios中的Interceptors（拦截器）模块，在全局请求使用上面的流程
 // /util/interceptor.js  实现了axios的响应拦截
 
@@ -123,24 +125,24 @@ const router = new Router({
 // 根据localStorage是否存在为判断依据，
 // 因为每次进入需要登录状态的页面，(参见home.vue以及store/mutations.js)
 // 已经对获取session的api进行了访问，因此方案一增加了请求次数
-router.beforeEach((to, from, next) => {
-    let session = localStorage.getItem('session')
-    if (to.meta.requireLogin) {
-        if (session) {
-            next();
-        } else {
-            next({
-                path: '/login',
-                query: {
-                    redirect: to.fullPath
-                }
-            })
-        }
+// router.beforeEach((to, from, next) => {
+//     let session = localStorage.getItem('session')
+//     if (to.meta.requireLogin) {
+//         if (session) {
+//             next();
+//         } else {
+//             next({
+//                 path: '/login',
+//                 query: {
+//                     redirect: to.fullPath
+//                 }
+//             })
+//         }
 
-    } else {
-        next();
-    }
-})
+//     } else {
+//         next();
+//     }
+// })
 
 
 export default router;

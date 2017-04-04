@@ -36,9 +36,8 @@
       // 的时效到了的话，便会提示未登录
       this.$http.get('/api')
         .then(res => {
-          // console.dir(res.data)
+          console.dir(res.data)
           if (res.data.error) {
-            this.delUserSession();
             this.$message.error(res.data.error);
             this.user.name = null;
             return false;
@@ -55,7 +54,7 @@
       
     },
     methods: {
-      ...mapActions(['userLoginOut','delUserSession']),
+      ...mapActions(['userLoginOut']),
       // 登出loginOut
       loginOut(){
         this.userLoginOut();

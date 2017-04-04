@@ -18,7 +18,7 @@ gulp.task('browser-sync', ['nodemon'], function() {
 });
 // browser-sync 监听文件
 gulp.task('server', ['browser-sync'], function() {
-    gulp.watch(['./server.js', './server/**'], ['bs-delay']);
+    gulp.watch(['./server.js', './server/**', './server-token/**'], ['bs-delay']);
 });
 
 
