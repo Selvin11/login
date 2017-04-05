@@ -29,7 +29,6 @@ npm install 安装依赖
 npm run dev 使用webpack开启前端资源的打包编译
 
 npm run server  启动服务端并开启浏览器
-
 ```
 
 这里需要双开两个命令行窗口，一个负责前端的编译，一个负责服务端的任务流
@@ -39,11 +38,13 @@ npm run server  启动服务端并开启浏览器
 [前端热更新，后端服务重启，浏览器自动刷新]( http://selvinpro.com/2017/03/20/browser-reload/#more)
 
 - [x] 实现了基本登录 cookie && session
-* [x] 独立系统登录 token
-* [ ] 第三方登录 access_token
+- [x] 独立系统登录 token
+- [ ] 第三方登录 access_token
 
 
 
+
+---
 
 
 
@@ -59,8 +60,8 @@ npm run server  启动服务端并开启浏览器
 浏览器用户提交表单后与服务器产生会话，传递给服务器一个识别信息，同时服务器这边有相应的数据，因此能够对其进行比较，然后识别是否为正确的用户，而且一般需要设定此数据的存储时长，也就是用户认证的时长，过了这个时间段，则会失效，需要重新登录，因此这里需要有四个关键点，**浏览器的信息**，**服务器的信息**，**两个信息的对比**，**时效设定**。
 
 <h3 id="1">二. 登录功能实现的几种方式</h3>
-1. 基本登录 cookie && session
 
+1. 基本登录 cookie && session
    浏览器提交用户表单后，服务器接受表单中的用户信息，将其存在session表中（session表存在内存，数据库，缓存等），然后以cookie的方式（cookie中存有sessionId及对应值）传回给浏览器，这样只要服务端设置的cookie没有失效，则在这段时间内，服务端便能正确识别用户信息，不用重复登录（sessionID是在服务端销毁的）
 
    * 服务器端的产生Session ID
@@ -134,7 +135,7 @@ npm run server  启动服务端并开启浏览器
       }
     ```
 
-  至此，当流程跑通之后，我们能够得到返回登录成功的信息，接下来就可以在前端通过`vue-router`实现跳转，以及将获取的user信息填入`localstorage`，供其它页面使用其数据。
+    至此，当流程跑通之后，我们能够得到返回登录成功的信息，接下来就可以在前端通过`vue-router`实现跳转，以及将获取的user信息填入`localstorage`，供其它页面使用其数据。
 
 3. 注册   POST： `/api/register`
 
@@ -156,8 +157,8 @@ npm run server  启动服务端并开启浏览器
    })
    ```
 5. 登录状态判断
-  
-  使用axios的拦截器，后端通过checkLogin函数判断session是否存在，返回sesssion的状态，在axios的响应拦截器中进行跳转设置，具体代码参见`./src/util/interceptor.js`
+
+    使用axios的拦截器，后端通过checkLogin函数判断session是否存在，返回sesssion的状态，在axios的响应拦截器中进行跳转设置，具体代码参见`./src/util/interceptor.js`
 
 
 <h3 id="4">四. token登录 详解 </h3>
@@ -165,6 +166,12 @@ npm run server  启动服务端并开启浏览器
 * 注册登录的实现基本和session相同，除了数据库模型中添加了token属性，然后主要是登录状态的不同
 
 * 使用token判断登录状态，主要是后端的checkToken，将前端请求中携带的token进行解码，获取其设置的有效时长，从而返回token状态，同样使用axios的拦截器，在请求拦截器中添加头部Authorization的token，在响应拦截器中设置判断
+
+---
+
+
+
+
 
 > 疑问详解
 
@@ -188,7 +195,7 @@ npm run server  启动服务端并开启浏览器
   * [详情可看github issue](https://github.com/vuejs/vuex/issues/47) 
 
 3. vue-router中的路由拦截详细介绍
-  
+
   ```javascript
     router.beforeEach((to, from, next) => {
       next({
